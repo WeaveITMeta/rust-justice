@@ -1,11 +1,11 @@
 mod home;
-mod about;
-mod platform;
-mod simulation;
-mod technology;
+mod courts;
+mod self_service;
+mod regulation;
+mod help;
 
 pub use home::Home;
-pub use about::About;
-pub use platform::Platform;
-pub use simulation::Simulation;
-pub use technology::Technology;
+pub use courts::Courts;
+pub use self_service::SelfService;
+pub use regulation::Regulation;
+pub use help::Help;

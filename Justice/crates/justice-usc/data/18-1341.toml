@@ -1,0 +1,84 @@
+# 18 U.S.C. § 1341 - Frauds and swindles (Mail Fraud)
+
+[statute]
+title = 18
+section = 1341
+heading = "Frauds and swindles"
+citation = "18 U.S.C. § 1341"
+
+[statute.text]
+full = """
+Whoever, having devised or intending to devise any scheme or artifice to \
+defraud, or for obtaining money or property by means of false or fraudulent \
+pretenses, representations, or promises, or to sell, dispose of, loan, \
+exchange, alter, give away, distribute, supply, or furnish or procure for \
+unlawful use any counterfeit or spurious coin, obligation, security, or \
+other article, or anything represented to be or intimated or held out to be \
+such counterfeit or spurious article, for the purpose of executing such \
+scheme or artifice or attempting so to do, places in any post office or \
+authorized depository for mail matter, any matter or thing whatever to be \
+sent or delivered by the Postal Service, or deposits or causes to be \
+deposited any matter or thing whatever to be sent or delivered by any \
+private or commercial interstate carrier, or takes or receives therefrom, \
+any such matter or thing, or knowingly causes to be delivered by mail or \
+such carrier according to the direction thereon, or at the place at which \
+it is directed to be delivered by the person to whom it is addressed, any \
+such matter or thing, shall be fined under this title or imprisoned not \
+more than 20 years, or both. If the violation occurs in relation to, or \
+involving any benefit authorized, transported, transmitted, transferred, \
+disbursed, or paid in connection with, a presidentially declared major \
+disaster or emergency, or affects a financial institution, such person \
+shall be fined not more than $1,000,000 or imprisoned not more than 30 \
+years, or both."""
+
+[statute.penalties]
+fine = "Under this title"
+imprisonment_max_years = 20
+imprisonment_max_years_aggravated = 30
+fine_aggravated = 1_000_000
+aggravating_factors = [
+    "Presidentially declared major disaster or emergency",
+    "Affects a financial institution"
+]
+
+[statute.elements]
+actus_reus = [
+    "Devised or intended to devise a scheme to defraud",
+    "Used the mails or private interstate carrier",
+    "For the purpose of executing the scheme"
+]
+mens_rea = "Intent to defraud"
+jurisdictional_element = "Use of U.S. mail or interstate carrier"
+
+[statute.source]
+enacted = "1948-06-25"
+statute_at_large = "ch. 645, 62 Stat. 763"
+last_amended = "2009-05-20"
+
+[[statute.amendments]]
+date = "1970-10-15"
+public_law = "91-452"
+description = "Increased penalties"
+
+[[statute.amendments]]
+date = "2002-07-30"
+public_law = "107-204"
+description = "Increased maximum imprisonment from 5 to 20 years"
+
+[[statute.amendments]]
+date = "2009-05-20"
+public_law = "111-21"
+description = "Added disaster/emergency aggravating factor"
+
+[statute.cross_references]
+related_statutes = [
+    "18 U.S.C. § 1343",   # Wire fraud
+    "18 U.S.C. § 1344",   # Bank fraud
+    "18 U.S.C. § 1346",   # Honest services fraud
+    "18 U.S.C. § 1349",   # Attempt and conspiracy
+]
+sentencing_guidelines = "USSG §2B1.1"
+
+[statute.tags]
+categories = ["fraud", "mail-fraud", "financial-crime", "federal-crime"]
+commonly_charged_with = ["1343", "1349", "1956", "1957"]

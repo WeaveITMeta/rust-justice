@@ -1,0 +1,2 @@
+-- This migration has been removed to avoid duplicate Chicot County courts
+-- The courts are already defined in 20250124201127_wispy_valley.sql

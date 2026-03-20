@@ -1,0 +1,43 @@
+[package]
+name = "justice-usc"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+# XML parsing
+quick-xml = { version = "0.36", features = ["serialize"] }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = "0.8"
+
+# Error handling
+thiserror = { workspace = true }
+
+# Utilities
+uuid = { workspace = true }
+chrono = { workspace = true }
+
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+
+# Regex for citation parsing
+regex = "1.11"
+
+# HTTP client for downloading USC data
+reqwest = { version = "0.12", features = ["blocking"] }
+tokio = { version = "1", features = ["full"] }
+
+# Search (future)
+# tantivy = "0.22"
+
+[lib]
+name = "justice_usc"
+path = "src/lib.rs"
+
+[[bin]]
+name = "justice-usc"
+path = "src/main.rs"

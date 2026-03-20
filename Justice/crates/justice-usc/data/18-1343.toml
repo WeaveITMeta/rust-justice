@@ -1,0 +1,71 @@
+# 18 U.S.C. § 1343 - Fraud by wire, radio, or television
+
+[statute]
+title = 18
+section = 1343
+heading = "Fraud by wire, radio, or television"
+citation = "18 U.S.C. § 1343"
+
+[statute.text]
+full = """
+Whoever, having devised or intending to devise any scheme or artifice to \
+defraud, or for obtaining money or property by means of false or fraudulent \
+pretenses, representations, or promises, transmits or causes to be \
+transmitted by means of wire, radio, or television communication in \
+interstate or foreign commerce, any writings, signs, signals, pictures, \
+or sounds for the purpose of executing such scheme or artifice, shall be \
+fined under this title or imprisoned not more than 20 years, or both. \
+If the violation occurs in relation to, or involving any benefit authorized, \
+transported, transmitted, transferred, disbursed, or paid in connection \
+with, a presidentially declared major disaster or emergency (as those terms \
+are defined in section 102 of the Robert T. Stafford Disaster Relief and \
+Emergency Assistance Act (42 U.S.C. 5122)), or affects a financial \
+institution, such person shall be fined not more than $1,000,000 or \
+imprisoned not more than 30 years, or both."""
+
+[statute.penalties]
+fine = "Under this title"
+imprisonment_max_years = 20
+imprisonment_max_years_aggravated = 30
+fine_aggravated = 1_000_000
+aggravating_factors = [
+    "Presidentially declared major disaster or emergency",
+    "Affects a financial institution"
+]
+
+[statute.elements]
+actus_reus = [
+    "Devised or intended to devise a scheme to defraud",
+    "Transmitted via wire, radio, or television",
+    "In interstate or foreign commerce"
+]
+mens_rea = "Intent to defraud"
+jurisdictional_element = "Interstate or foreign commerce"
+
+[statute.source]
+enacted = "1952-07-16"
+statute_at_large = "Pub. L. 82-514, 66 Stat. 722"
+last_amended = "2009-05-20"
+
+[[statute.amendments]]
+date = "2002-07-30"
+public_law = "107-204"
+description = "Increased maximum imprisonment from 5 to 20 years"
+
+[[statute.amendments]]
+date = "2009-05-20"
+public_law = "111-21"
+description = "Added disaster/emergency aggravating factor"
+
+[statute.cross_references]
+related_statutes = [
+    "18 U.S.C. § 1341",   # Mail fraud
+    "18 U.S.C. § 1344",   # Bank fraud
+    "18 U.S.C. § 1346",   # Honest services fraud
+    "18 U.S.C. § 1349",   # Attempt and conspiracy
+]
+sentencing_guidelines = "USSG §2B1.1"
+
+[statute.tags]
+categories = ["fraud", "wire-fraud", "financial-crime", "federal-crime"]
+commonly_charged_with = ["1341", "1349", "1956", "1957"]

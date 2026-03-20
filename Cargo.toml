@@ -1,8 +1,9 @@
 [workspace]
 resolver = "2"
 members = [
-    "website",
-    "crates/justice-eustress",
+    "Website",
+    "Justice/crates/justice-eustress",
+    "Justice/crates/justice-usc",
 ]
 
 # Exclude upstream repos from workspace - they have their own workspaces
@@ -19,7 +20,7 @@ repository = "https://github.com/WeaveITMeta/rust-justice"
 
 [workspace.dependencies]
 # Justice crates
-justice-eustress = { path = "crates/justice-eustress" }
+justice-eustress = { path = "Justice/crates/justice-eustress" }
 
 # Leptos for web
 leptos = { version = "0.7", features = ["csr"] }

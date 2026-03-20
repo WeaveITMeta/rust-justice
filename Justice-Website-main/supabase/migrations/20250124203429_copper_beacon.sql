@@ -1,0 +1,2 @@
+-- This migration has been removed to avoid duplicate Dallas County courts
+-- The courts are already defined in 20250124203204_odd_sea.sql

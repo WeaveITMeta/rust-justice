@@ -1,0 +1,2 @@
+-- This migration has been removed to avoid duplicate Craighead County courts
+-- The courts are already defined in 20250124202057_silent_sun.sql

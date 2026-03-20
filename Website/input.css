@@ -3,101 +3,24 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --color-primary: #1e3a5f;
-        --color-secondary: #2d5a87;
-        --color-accent: #c9a227;
-        --color-justice-blue: #0a2540;
-        --color-justice-gold: #d4af37;
-    }
-
     html {
         scroll-behavior: smooth;
     }
 
     body {
-        @apply bg-slate-50 text-slate-900 antialiased;
+        @apply bg-gray-50 text-slate-900 antialiased;
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 }
 
 @layer components {
-    .nav-link {
-        @apply px-4 py-2 text-slate-200 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200;
-    }
-
-    .nav-link-active {
-        @apply bg-white/15 text-white;
-    }
-
-    .btn-primary {
-        @apply px-6 py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200;
-    }
-
-    .btn-secondary {
-        @apply px-6 py-3 bg-transparent border-2 border-white text-white hover:bg-white hover:text-slate-900 font-semibold rounded-lg transition-all duration-200;
-    }
-
-    .card {
-        @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6;
-    }
-
-    .section-title {
-        @apply text-3xl md:text-4xl font-bold text-slate-900 mb-4;
-    }
-
-    .section-subtitle {
-        @apply text-lg text-slate-600 max-w-3xl mx-auto;
-    }
-
-    .gradient-hero {
-        background: linear-gradient(135deg, var(--color-justice-blue) 0%, var(--color-secondary) 50%, var(--color-primary) 100%);
-    }
-
-    .gradient-text {
-        @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-amber-600;
-    }
-
-    .feature-icon {
-        @apply w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-2xl shadow-lg;
-    }
-
-    .pillar-card {
-        @apply relative overflow-hidden rounded-2xl p-8 text-white transition-transform duration-300 hover:scale-105;
-    }
-
-    .stat-number {
-        @apply text-5xl font-bold text-amber-400;
-    }
-
-    .footer-link {
-        @apply text-slate-400 hover:text-white transition-colors duration-200;
+    .container {
+        @apply max-w-7xl mx-auto;
     }
 }
 
 @layer utilities {
     .text-balance {
         text-wrap: balance;
-    }
-
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-    }
-
-    .animate-pulse-slow {
-        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    .glass {
-        @apply bg-white/10 backdrop-blur-lg border border-white/20;
-    }
-
-    .glass-dark {
-        @apply bg-slate-900/80 backdrop-blur-lg border border-slate-700/50;
     }
 }

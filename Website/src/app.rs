@@ -5,7 +5,7 @@ use leptos_router::{
 };
 
 use crate::components::{Footer, Navigation};
-use crate::pages::{About, Home, Platform, Simulation, Technology};
+use crate::pages::{Home, Courts, SelfService, Regulation, Help};
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -13,13 +13,13 @@ pub fn App() -> impl IntoView {
         <Router>
             <div class="min-h-screen flex flex-col">
                 <Navigation />
-                <main class="flex-1">
+                <main class="flex-grow">
                     <Routes fallback=|| view! { <NotFound /> }>
                         <Route path=path!("/") view=Home />
-                        <Route path=path!("/about") view=About />
-                        <Route path=path!("/platform") view=Platform />
-                        <Route path=path!("/simulation") view=Simulation />
-                        <Route path=path!("/technology") view=Technology />
+                        <Route path=path!("/courts") view=Courts />
+                        <Route path=path!("/self-service") view=SelfService />
+                        <Route path=path!("/regulation") view=Regulation />
+                        <Route path=path!("/help") view=Help />
                     </Routes>
                 </main>
                 <Footer />
@@ -35,7 +35,9 @@ fn NotFound() -> impl IntoView {
             <div class="text-center">
                 <h1 class="text-6xl font-bold text-slate-900 mb-4">"404"</h1>
                 <p class="text-xl text-slate-600 mb-8">"Page not found"</p>
-                <a href="/" class="btn-primary">"Return Home"</a>
+                <a href="/" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    "Return Home"
+                </a>
             </div>
         </div>
     }
