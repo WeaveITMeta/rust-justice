@@ -34,3 +34,6 @@ Thumbs.db
 usc/raw/*.xml
 usc/parsed/
 usc/index/
+
+# Personal files
+Personal/
