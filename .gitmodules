@@ -1,0 +1,6 @@
+[submodule "Conceptual"]
+	path = Conceptual
+	url = https://github.com/WeaveITMeta/Justice
+[submodule "Eustress"]
+	path = Eustress
+	url = https://github.com/WeaveITMeta/EustressEngine

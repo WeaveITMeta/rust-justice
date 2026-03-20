@@ -1,0 +1,33 @@
+[package]
+name = "justice-eustress"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Justice System integration crate for the Eustress Engine - courtroom simulation, evidence visualization, and justice-centric 3D applications"
+repository = "https://github.com/WeaveITMeta/rust-justice"
+keywords = ["justice", "simulation", "bevy", "eustress", "legal"]
+categories = ["game-development", "simulation"]
+
+[features]
+default = ["courtroom", "evidence"]
+courtroom = []
+evidence = []
+training = []
+networking = []
+full = ["courtroom", "evidence", "training", "networking"]
+
+[dependencies]
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+
+# Utilities
+uuid = { version = "1.8", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "2.0"
+
+# Note: Bevy/Eustress dependencies are optional and loaded from the upstream Eustress workspace
+# Users should add bevy as a dependency in their own Cargo.toml when using this crate with the engine
+
+[dev-dependencies]
+# For testing without full engine

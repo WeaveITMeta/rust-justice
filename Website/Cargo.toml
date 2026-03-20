@@ -1,0 +1,26 @@
+[package]
+name = "justice-website"
+version.workspace = true
+edition = "2021"
+license.workspace = true
+description = "Justice System - 3D Simulation & Advanced Technology for Justice Reform"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+leptos.workspace = true
+leptos_meta.workspace = true
+leptos_router.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+wasm-bindgen.workspace = true
+console_error_panic_hook.workspace = true
+console_log.workspace = true
+log.workspace = true
+web-sys.workspace = true
+
+[features]
+default = []
+hydrate = ["leptos/hydrate"]
+csr = ["leptos/csr"]

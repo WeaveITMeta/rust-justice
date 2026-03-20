@@ -1,0 +1,15 @@
+{
+  "name": "justice-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "css": "tailwindcss -i ./style.css -o ./dist/style.css --watch",
+    "css:build": "tailwindcss -i ./style.css -o ./dist/style.css --minify",
+    "dev": "concurrently \"bun css\" \"trunk serve\"",
+    "build": "bun css:build && trunk build --release"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4",
+    "concurrently": "^8.2"
+  }
+}
