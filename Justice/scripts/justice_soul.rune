@@ -1,0 +1,522 @@
+// Justice System Soul Script
+// Rune-based event handlers and decision logic
+// For use in SoulService within Eustress Universe/Space
+
+use event_bus;
+use std::collections::HashMap;
+
+// ============================================================
+// CONFIGURATION
+// ============================================================
+
+const MIN_CONFIDENCE_FOR_INTERVENTION = 0.7;
+const LOW_CONFIDENCE_THRESHOLD = 0.5;
+const PREDICTIVE_ALERT_THRESHOLD = 0.8;
+
+// ============================================================
+// STATE MANAGEMENT
+// ============================================================
+
+struct InmateState {
+    id: String,
+    classification_history: Vec<(String, f64)>,
+    current_classification: Option<String>,
+    rehabilitation_progress: f64,
+    active_interventions: Vec<String>,
+    rights_violations: Vec<String>,
+    last_updated: u64,
+}
+
+struct InterventionState {
+    id: String,
+    inmate_id: String,
+    intervention_type: String,
+    assigned_staff: String,
+    start_time: u64,
+    status: String, // "assigned", "in_progress", "completed"
+    outcome: Option<String>,
+}
+
+// Global state (Soul-level persistence)
+static mut INMATES: HashMap<String, InmateState> = HashMap::new();
+static mut INTERVENTIONS: HashMap<String, InterventionState> = HashMap::new();
+static mut AUDIT_LOG: Vec<String> = Vec::new();
+
+// ============================================================
+// EVENT HANDLERS
+// ============================================================
+
+/// Handle inmate classification from Karbuche
+pub fn handle_inmate_classified(args: Vec<String>) {
+    let inmate_id = args.get(0)?.clone();
+    let classification = args.get(1)?.clone();
+    let confidence: f64 = args.get(2)?.parse()?;
+    let timestamp: u64 = args.get(3)?.parse()?;
+    
+    dbg!(
+        "[Justice Soul] Inmate classified:",
+        inmate_id.clone(),
+        classification.clone(),
+        confidence
+    );
+    
+    // Update inmate state
+    let inmate = INMATES.entry(inmate_id.clone()).or_insert(InmateState {
+        id: inmate_id.clone(),
+        classification_history: Vec::new(),
+        current_classification: None,
+        rehabilitation_progress: 0.0,
+        active_interventions: Vec::new(),
+        rights_violations: Vec::new(),
+        last_updated: timestamp,
+    });
+    
+    inmate.classification_history.push((classification.clone(), confidence));
+    inmate.current_classification = Some(classification.clone());
+    inmate.last_updated = timestamp;
+    
+    // Decision logic based on classification
+    if confidence < LOW_CONFIDENCE_THRESHOLD {
+        // Low confidence = needs monitoring
+        event_bus::fire(
+            "monitoring_increased",
+            format!("{}:low_confidence:increase_surveillance", inmate_id)
+        );
+    }
+    
+    if classification == "violent_behavior" && confidence >= MIN_CONFIDENCE_FOR_INTERVENTION {
+        event_bus::fire(
+            "intervention_required",
+            format!("{}:violent_behavior:immediate_counseling:{:.2}", inmate_id, confidence)
+        );
+    }
+    
+    if classification == "self_harm_risk" && confidence >= MIN_CONFIDENCE_FOR_INTERVENTION {
+        event_bus::fire(
+            "medical_alert",
+            format!("{}:self_harm:high:immediate_response", inmate_id)
+        );
+    }
+    
+    if classification == "cooperative" && confidence >= 0.8 {
+        inmate.rehabilitation_progress += 0.1;
+        if inmate.rehabilitation_progress >= 1.0 {
+            inmate.rehabilitation_progress = 1.0;
+        }
+        
+        event_bus::fire(
+            "rehabilitation_milestone",
+            format!("{}:positive_behavior:milestone_reached:{:.2}", inmate_id, inmate.rehabilitation_progress)
+        );
+    }
+    
+    Some(())
+}
+
+/// Handle violence detection
+pub fn handle_violence_detected(args: Vec<String>) {
+    let location = args.get(0)?.clone();
+    let confidence: f64 = args.get(1)?.parse()?;
+    let involved_inmates = args.get(2)?.clone(); // comma-separated
+    
+    dbg!(
+        "[Justice Soul] VIOLENCE DETECTED:",
+        location.clone(),
+        confidence
+    );
+    
+    // Immediate response
+    event_bus::fire(
+        "immediate_response",
+        format!("violence:{}:critical:dispatch_security", location)
+    );
+    
+    // Medical dispatch if high confidence
+    if confidence > 0.9 {
+        event_bus::fire(
+            "medical_alert",
+            format!("{}:violence_injury:critical", location)
+        );
+    }
+    
+    // Log for compliance
+    event_bus::fire(
+        "incident_logged",
+        format!("violence:{}:{}:28_USC_1983", location, involved_inmates)
+    );
+    
+    // Audit trail
+    let audit_entry = format!(
+        "VIOLENCE:{}:{}:{}",
+        timestamp_now(),
+        location,
+        involved_inmates
+    );
+    AUDIT_LOG.push(audit_entry);
+    
+    Some(())
+}
+
+/// Handle anomaly detection
+pub fn handle_anomaly_alert(args: Vec<String>) {
+    let anomaly_type = args.get(0)?.clone();
+    let location = args.get(1)?.clone();
+    let confidence: f64 = args.get(2)?.parse()?;
+    let involved = args.get(3)?.clone_or_default();
+    
+    dbg!(
+        "[Justice Soul] Anomaly:",
+        anomaly_type.clone(),
+        location.clone()
+    );
+    
+    match anomaly_type.as_str() {
+        "unusual_clustering" => {
+            event_bus::fire(
+                "monitoring_increased",
+                format!("{}:crowd_anomaly:deploy_additional_staff", location)
+            );
+        }
+        "conflict_escalation" => {
+            event_bus::fire(
+                "intervention_required",
+                format!("{}:de_escalation:high:{}", location, involved)
+            );
+        }
+        "medical_emergency" => {
+            event_bus::fire(
+                "medical_alert",
+                format!("{}:medical:critical:{}", location, anomaly_type)
+            );
+        }
+        _ => {}
+    }
+    
+    Some(())
+}
+
+/// Handle intervention assignment
+pub fn handle_intervention_assigned(args: Vec<String>) {
+    let intervention_id = args.get(0)?.clone();
+    let inmate_id = args.get(1)?.clone();
+    let intervention_type = args.get(2)?.clone();
+    let assigned_staff = args.get(3)?.clone();
+    let location = args.get(4)?.clone_or_default();
+    
+    dbg!(
+        "[Justice Soul] Intervention assigned:",
+        intervention_id.clone(),
+        inmate_id.clone()
+    );
+    
+    let intervention = InterventionState {
+        id: intervention_id.clone(),
+        inmate_id: inmate_id.clone(),
+        intervention_type: intervention_type.clone(),
+        assigned_staff: assigned_staff.clone(),
+        start_time: timestamp_now(),
+        status: "assigned".to_string(),
+        outcome: None,
+    };
+    
+    INTERVENTIONS.insert(intervention_id.clone(), intervention);
+    
+    // Update inmate state
+    if let Some(inmate) = INMATES.get_mut(&inmate_id) {
+        inmate.active_interventions.push(intervention_id.clone());
+    }
+    
+    // Notify staff
+    event_bus::fire(
+        "staff_notification",
+        format!("{}:intervention_assigned:{}:{}", assigned_staff, intervention_id, location)
+    );
+    
+    Some(())
+}
+
+/// Handle intervention completion
+pub fn handle_intervention_completed(args: Vec<String>) {
+    let intervention_id = args.get(0)?.clone();
+    let outcome = args.get(1)?.clone();
+    
+    dbg!(
+        "[Justice Soul] Intervention completed:",
+        intervention_id.clone(),
+        outcome.clone()
+    );
+    
+    if let Some(intervention) = INTERVENTIONS.get_mut(&intervention_id) {
+        intervention.status = "completed".to_string();
+        intervention.outcome = Some(outcome.clone());
+        
+        // Update inmate record
+        if let Some(inmate) = INMATES.get_mut(&intervention.inmate_id) {
+            inmate.active_interventions.retain(|id| id != &intervention_id);
+            
+            // Adjust rehabilitation progress based on outcome
+            match outcome.as_str() {
+                "successful" => {
+                    inmate.rehabilitation_progress += 0.15;
+                }
+                "partial" => {
+                    inmate.rehabilitation_progress += 0.05;
+                }
+                "unsuccessful" => {
+                    // No progress, may need more intensive intervention
+                }
+                _ => {}
+            }
+            
+            if inmate.rehabilitation_progress > 1.0 {
+                inmate.rehabilitation_progress = 1.0;
+            }
+        }
+        
+        // Create audit record
+        let duration = timestamp_now() - intervention.start_time;
+        let audit_entry = format!(
+            "INTERVENTION_COMPLETED:{}:{}:{}:{}s",
+            timestamp_now(),
+            intervention_id,
+            outcome,
+            duration
+        );
+        AUDIT_LOG.push(audit_entry);
+        
+        event_bus::fire(
+            "audit_record_created",
+            format!("intervention:{}:hash_placeholder", intervention_id)
+        );
+    }
+    
+    Some(())
+}
+
+/// Handle compliance violations
+pub fn handle_compliance_violation(args: Vec<String>) {
+    let usc_section = args.get(0)?.clone();
+    let violation_type = args.get(1)?.clone();
+    let details = args.get(2)?.clone_or_default();
+    
+    dbg!(
+        "[Justice Soul] COMPLIANCE VIOLATION:",
+        usc_section.clone(),
+        violation_type.clone()
+    );
+    
+    // Immediate escalation
+    event_bus::fire(
+        "administrator_alert",
+        format!("compliance_violation:critical:{}:{}", usc_section, violation_type)
+    );
+    
+    // Audit record
+    let audit_entry = format!(
+        "COMPLIANCE_VIOLATION:{}:{}:{}:{}",
+        timestamp_now(),
+        usc_section,
+        violation_type,
+        details
+    );
+    AUDIT_LOG.push(audit_entry);
+    
+    event_bus::fire(
+        "audit_record_created",
+        format!("compliance_violation:{}:hash_placeholder", usc_section)
+    );
+    
+    Some(())
+}
+
+/// Handle rights violations (Title 28 § 1983)
+pub fn handle_rights_violation(args: Vec<String>) {
+    let inmate_id = args.get(0)?.clone();
+    let right_violated = args.get(1)?.clone();
+    let details = args.get(2)?.clone_or_default();
+    
+    dbg!(
+        "[Justice Soul] RIGHTS VIOLATION:",
+        inmate_id.clone(),
+        right_violated.clone()
+    );
+    
+    // Update inmate record
+    if let Some(inmate) = INMATES.get_mut(&inmate_id) {
+        inmate.rights_violations.push(right_violated.clone());
+    }
+    
+    // Legal escalation
+    event_bus::fire(
+        "legal_escalation",
+        format!("{}:{}:28_USC_1983:{}", inmate_id, right_violated, details)
+    );
+    
+    // Audit
+    let audit_entry = format!(
+        "RIGHTS_VIOLATION:{}:{}:{}:28_USC_1983",
+        timestamp_now(),
+        inmate_id,
+        right_violated
+    );
+    AUDIT_LOG.push(audit_entry);
+    
+    Some(())
+}
+
+/// Handle program assignments
+pub fn handle_program_assigned(args: Vec<String>) {
+    let inmate_id = args.get(0)?.clone();
+    let program_name = args.get(1)?.clone();
+    let reason = args.get(2)?.clone_or_default();
+    
+    dbg!(
+        "[Justice Soul] Program assigned:",
+        program_name.clone(),
+        inmate_id.clone()
+    );
+    
+    event_bus::fire(
+        "rehabilitation_plan_updated",
+        format!("{}:{}:{}:30_days", inmate_id, program_name, reason)
+    );
+    
+    Some(())
+}
+
+/// Handle rehabilitation milestones
+pub fn handle_rehabilitation_milestone(args: Vec<String>) {
+    let inmate_id = args.get(0)?.clone();
+    let milestone = args.get(1)?.clone();
+    
+    dbg!(
+        "[Justice Soul] Milestone:",
+        milestone.clone(),
+        inmate_id.clone()
+    );
+    
+    event_bus::fire(
+        "positive_reinforcement",
+        format!("{}:{}:privileges_granted", inmate_id, milestone)
+    );
+    
+    Some(())
+}
+
+/// Handle predictive alerts
+pub fn handle_predictive_alert(args: Vec<String>) {
+    let incident_type = args.get(0)?.clone();
+    let probability: f64 = args.get(1)?.parse()?;
+    let location = args.get(2)?.clone();
+    let eta_minutes: u32 = args.get(3)?.parse()?;
+    
+    dbg!(
+        "[Justice Soul] Predictive alert:",
+        incident_type.clone(),
+        location.clone(),
+        probability
+    );
+    
+    // Preemptive response if high probability
+    if probability > PREDICTIVE_ALERT_THRESHOLD {
+        event_bus::fire(
+            "preemptive_intervention",
+            format!("{}:{}:{}min:deploy_preventive_staff", incident_type, location, eta_minutes)
+        );
+    }
+    
+    Some(())
+}
+
+/// Handle audit record creation
+pub fn handle_audit_record_created(args: Vec<String>) {
+    let record_type = args.get(0)?.clone();
+    let record_hash = args.get(1)?.clone();
+    
+    dbg!(
+        "[Justice Soul] Audit record:",
+        record_type.clone(),
+        record_hash.clone()
+    );
+    
+    event_bus::fire(
+        "immutable_backup",
+        format!("{}:{}:{}:7_years", record_type, record_hash, timestamp_now())
+    );
+    
+    Some(())
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+
+fn timestamp_now() -> u64 {
+    // In real implementation, this would get actual system time
+    // For Rune script, we might need to pass timestamp from host
+    0u64
+}
+
+/// Get active intervention count
+pub fn get_active_intervention_count() -> usize {
+    INTERVENTIONS.len()
+}
+
+/// Get inmate rehabilitation progress
+pub fn get_inmate_progress(inmate_id: String) -> Option<f64> {
+    INMATES.get(&inmate_id).map(|i| i.rehabilitation_progress)
+}
+
+/// Get audit log size
+pub fn get_audit_log_size() -> usize {
+    AUDIT_LOG.len()
+}
+
+/// Clean up old records (call periodically)
+pub fn cleanup_old_records(max_age_seconds: u64) {
+    let cutoff = timestamp_now().saturating_sub(max_age_seconds);
+    
+    // Clean up old interventions
+    INTERVENTIONS.retain(|_, intervention| {
+        if intervention.status == "completed" {
+            intervention.start_time > cutoff
+        } else {
+            true // Keep active interventions
+        }
+    });
+}
+
+// ============================================================
+// EVENT REGISTRATION
+// ============================================================
+
+pub fn register_event_handlers() {
+    // Note: In actual SoulService, these would be registered
+    // through the event_bus module when the soul is loaded
+    
+    dbg!("[Justice Soul] Event handlers registered");
+    dbg!("[Justice Soul] Listening for:");
+    dbg!("  - inmate_classified");
+    dbg!("  - violence_detected");
+    dbg!("  - anomaly_alert");
+    dbg!("  - intervention_assigned");
+    dbg!("  - intervention_completed");
+    dbg!("  - compliance_violation");
+    dbg!("  - rights_violation");
+    dbg!("  - program_assigned");
+    dbg!("  - rehabilitation_milestone");
+    dbg!("  - predictive_alert");
+    dbg!("  - audit_record_created");
+}
+
+// ============================================================
+// MODULE EXPORTS
+// ============================================================
+
+// These functions are exposed to the Rune runtime
+// and can be called from Luau or other scripts
+
+pub fn main() {
+    register_event_handlers();
+    dbg!("[Justice Soul] Initialized and ready");
+}
