@@ -22,6 +22,7 @@ pub fn Navigation() -> impl IntoView {
                                 <a href="/courts" class="flex items-center justify-center h-[40px] px-2 hover:text-blue-400 transition">"Courts"</a>
                                 <a href="/self-service" class="flex items-center justify-center h-[40px] px-2 hover:text-blue-400 transition">"Service"</a>
                                 <a href="/regulation" class="flex items-center justify-center h-[40px] px-2 hover:text-blue-400 transition">"Regulation"</a>
+                                <a href="/super-station" class="flex items-center justify-center h-[40px] px-2 hover:text-blue-400 transition">"Super Station"</a>
                                 <a href="/help" class="flex items-center justify-center h-[40px] px-2 hover:text-blue-400 transition">"Help"</a>
                             </div>
                         </nav>
@@ -61,6 +62,7 @@ pub fn Navigation() -> impl IntoView {
                         <a href="/courts" class="block px-3 py-2 rounded-lg hover:bg-slate-800 transition">"Courts"</a>
                         <a href="/self-service" class="block px-3 py-2 rounded-lg hover:bg-slate-800 transition">"Service"</a>
                         <a href="/regulation" class="block px-3 py-2 rounded-lg hover:bg-slate-800 transition">"Regulation"</a>
+                        <a href="/super-station" class="block px-3 py-2 rounded-lg hover:bg-slate-800 transition">"Super Station"</a>
                         <a href="/help" class="block px-3 py-2 rounded-lg hover:bg-slate-800 transition">"Help"</a>
                     </div>
                 </div>

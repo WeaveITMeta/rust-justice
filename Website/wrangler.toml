@@ -1,0 +1,10 @@
+# Cloudflare Workers static-assets deploy of the Justice website (a client-side Leptos app).
+# Build first:  trunk build --release      Deploy:  npx wrangler deploy
+name = "rust-justice"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[assets]
+directory = "./dist"
+# Every route (/courts, /super-station ...) is drawn by the app, so unknown paths serve index.html.
+not_found_handling = "single-page-application"

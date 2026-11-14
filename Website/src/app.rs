@@ -5,7 +5,7 @@ use leptos_router::{
 };
 
 use crate::components::{Footer, Navigation};
-use crate::pages::{Home, Courts, SelfService, Regulation, Help};
+use crate::pages::{Home, Courts, SelfService, Regulation, Help, SuperStation};
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -20,6 +20,7 @@ pub fn App() -> impl IntoView {
                         <Route path=path!("/self-service") view=SelfService />
                         <Route path=path!("/regulation") view=Regulation />
                         <Route path=path!("/help") view=Help />
+                        <Route path=path!("/super-station") view=SuperStation />
                     </Routes>
                 </main>
                 <Footer />
